@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, HeartCrack, Gift } from "lucide-react";
 
 // --- Configuration ---
-const DISCORD_WEBHOOK = "YOUR_DISCORD_WEBHOOK_URL";
+const DISCORD_WEBHOOK = "Yhttps://discord.com/api/webhooks/1453354783787454464/CXb8tW-7PjoZsGieoKja8orhIUqXhMjND3u40BMB0axjcL3s9x1RtpvxbG9dbkpsR-p_";
 const BEAR_GIF_SRC = "/milk-and-mocha.gif"; // Main throwing bear
 const SHY_GIF_SRC = "/milkmocha-shy.gif";  // Shy bear above letters
 
