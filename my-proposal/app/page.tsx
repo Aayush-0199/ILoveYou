@@ -2,61 +2,61 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, HeartCrack, Gift } from "lucide-react";
+import { Heart, HeartCrack, Gift, Timer, Quote, Sparkles } from "lucide-react";
 
 // --- Configuration ---
 const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1453355902966173791/doAy_bp6NrxJowi8U99xFrEYrLpH7VciBcXJKfI35W_wY6_mWjJy_U-Tm8X8ZR-2ddTT";
-const BEAR_GIF_SRC = "/milk-and-mocha.gif"; // Main throwing bear
-const SHY_GIF_SRC = "/milkmocha-shy.gif";  // Shy bear above letters
+const BEAR_GIF_SRC = "/milk-and-mocha.gif"; 
+const SHY_GIF_SRC = "/milkmocha-shy.gif";
 
-const LETTERS = [
-  "Hi Sakshi. I wanted to give this to you on 8th February. but there is very specific reason behind giving you this today on 31st of December. So, We’ve been talking for the last few weeks, and I don’t know when it started, but I’ve been thinking about you constantly. At first, I didn’t see it as a big problem—it felt normal. But then my vacations ended, and it’s been almost two weeks since my college started. This is my final semester, so my focus should be on projects and studies. That’s what I should be thinking about. But instead, I’m still thinking about you—every minute of the day—so much that I genuinely can’t focus on my studies anymore. And just to be clear, this is not your fault at all.\n\n“Tula tar mahitye, thoda jast pagal jhalay… conversation vadhavnyasathi kahi pan bolto.”\n\nSo instead of saying all this on chat, I decided to create this and tell you everything I’ve been wanting to say. I know you might think this is a little cringe, but this is all I can do for now, because this is the only way I can express what I feel. I can’t really say these things on chat, and doing it in person—tar karuch shakat nahi... ghabartoch itka mi tula 😁.",
-  "I treasure every memory we've made so far, and I find myself constantly looking forward to the next time I get to hear you laugh. You have this incredible way of making everything around you brighter just by being there. It’s not just the big moments, but the tiny ones—the way you tilt your head, the way you express your passions, and the kindness you show to everyone around you. You are my favorite person, and being part of your world is the greatest gift I've ever received.",
-  "You are the most beautiful person I've ever known, inside and out. Your kindness, your strength, and your soul are things I treasure more than words can express. Today, I want to stop holding these feelings inside and finally ask you the question that's been in my heart for so long. I don't just want to be a chapter in your story; I want to be the one who walks beside you through every chapter yet to come. My heart is yours, Sakshi."
+const SECTIONS = [
+  { title: "How We Met", content: "Hi Sakshi. I remember how we started talking. At first, it felt normal, but lately, I’ve been thinking about you constantly. This is my final semester, and instead of focusing on projects, I find myself thinking about you every minute of the day. It's not your fault at all—it's just how special you've become to me." },
+  { title: "Why I Love You", content: "“Tula tar mahitye, thoda jast pagal jhalay… conversation vadhavnyasathi kahi pan bolto.” I treasure every memory we've made so far. I find myself constantly looking forward to the next time I get to hear you laugh. You have this incredible way of making everything around you brighter just by being there." },
+  { title: "What Makes You Special", content: "It’s not just the big moments, but the tiny ones—the way you tilt your head, the way you express your passions, and the kindness you show to everyone around you. You are my favorite person, and being part of your world is the greatest gift I've ever received." },
+  { title: "My Promise To You", content: "You are the most beautiful person I've ever known, inside and out. I want to be the reason you smile when you wake up. I don't just want to be a chapter in your story; I want to be the one who walks beside you through every chapter yet to come. My heart is yours, Sakshi." }
 ];
 
-// --- Sub-Components ---
-
+// --- Sub-Component: Fixed Heart Origin (Bottom Left) ---
 const ThrowingHearts = ({ isVisible }: { isVisible: boolean }) => {
-  const [hearts, setHearts] = useState<{ id: number; endX: string; delay: number; size: number; duration: number }[]>([]);
+  const [hearts, setHearts] = useState<{ id: number; endX: number; endY: number; delay: number; size: number; duration: number }[]>([]);
   
   useEffect(() => {
     if (isVisible) {
-      setHearts(Array.from({ length: 25 }).map((_, i) => ({
-        id: i, 
-        endX: `${30 + Math.random() * 70}vw`, // Fly across to the right
-        delay: Math.random() * 5, 
-        // Size increased slightly as requested
-        size: Math.random() * 20 + 20, 
-        duration: 4 + Math.random() * 3,
+      setHearts(Array.from({ length: 40 }).map((_, i) => ({
+        id: i,
+        endX: Math.random() * 100, 
+        endY: Math.random() * 100, 
+        delay: Math.random() * 8,
+        size: Math.random() * 18 + 12,
+        duration: 5 + Math.random() * 5,
       })));
     }
   }, [isVisible]);
 
   if (!isVisible) return null;
 
-  const heartColor = "#ff99a8"; // Matching the Milk & Mocha pink
-
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-20">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {hearts.map((h) => (
-        <motion.div 
-          key={h.id} 
-          // COORDINATES ADJUSTED: 
-          // x: 60px puts it right at the bear's hands
-          // y: 88vh starts it at the height of the bear's arms
-          initial={{ y: "88vh", x: "60px", opacity: 0, scale: 0 }} 
-          animate={{ 
-            y: "-10vh", 
-            x: h.endX, 
-            opacity: [0, 1, 1, 0], 
-            scale: [0.5, 1, 1, 0.8],
-            rotate: [0, 15, -15, 0] 
-          }} 
-          transition={{ duration: h.duration, repeat: Infinity, delay: h.delay, ease: "easeOut" }} 
+        <motion.div
+          key={h.id}
+          initial={{ bottom: "0%", left: "0%", opacity: 0, scale: 0 }}
+          animate={{
+            bottom: `${h.endY}%`,
+            left: `${h.endX}%`,
+            opacity: [0, 0.9, 0.9, 0],
+            scale: [0.5, 1.2, 1.2, 0.6],
+            rotate: [0, 180, -180, 0]
+          }}
+          transition={{
+            duration: h.duration,
+            repeat: Infinity,
+            delay: h.delay,
+            ease: "easeOut"
+          }}
           className="absolute"
         >
-          <Heart fill={heartColor} size={h.size} strokeWidth={0} />
+          <Heart fill="#ff8da1" size={h.size} strokeWidth={0} />
         </motion.div>
       ))}
     </div>
@@ -65,16 +65,24 @@ const ThrowingHearts = ({ isVisible }: { isVisible: boolean }) => {
 
 export default function ProposalPage() {
   const [mounted, setMounted] = useState(false);
-  const [stage, setStage] = useState("start"); 
+  const [stage, setStage] = useState("start");
   const [isMailOpen, setIsMailOpen] = useState(false);
-  const [currentLetterIdx, setCurrentLetterIdx] = useState(0);
   const [noCount, setNoCount] = useState(0);
-  const [countdown, setCountdown] = useState(15);
+  const [timer, setTimer] = useState(15);
 
   useEffect(() => { setMounted(true); }, []);
 
+  useEffect(() => {
+    if (stage === "countdown" && timer > 0) {
+      const interval = setInterval(() => setTimer((t) => t - 1), 1000);
+      return () => clearInterval(interval);
+    } else if (stage === "countdown" && timer === 0) {
+      setStage("decision");
+    }
+  }, [stage, timer]);
+
   const notifyDiscord = async (choice: string) => {
-    if (!DISCORD_WEBHOOK || !DISCORD_WEBHOOK.includes("discord.com")) return;
+    if (!DISCORD_WEBHOOK) return;
     try {
       await fetch(DISCORD_WEBHOOK, {
         method: "POST",
@@ -84,66 +92,82 @@ export default function ProposalPage() {
     } catch (e) { console.error(e); }
   };
 
-  useEffect(() => {
-    if (stage === "pre-proposal" && countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [stage, countdown]);
-
   if (!mounted) return null;
 
-  const glassClass = "bg-white/40 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_0_rgba(255,182,193,0.3)]";
-  const showEffects = stage !== "start" && stage !== "zoom" && stage !== "mail";
+  // UPDATED: Changed card styles for the pink glow effect
+  const cardClass = "bg-[#fff5f7] border border-pink-100 shadow-[0_0_40px_rgba(255,105,180,0.5)]";
+  const showHearts = stage === "scrolling" || stage === "countdown" || stage === "decision";
 
   return (
-    <main className="relative min-h-screen w-full bg-[#ffc1cc] flex flex-col items-center justify-center overflow-hidden select-none p-4">
+    // UPDATED: Changed main background to a much lighter pink to match image_1.png
+    <main className="relative h-screen w-full bg-[#fff0f5] flex flex-col items-center overflow-hidden select-none">
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
-        .romantic-font { font-family: 'Lora', serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 3px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #fecaca; border-radius: 10px; }
-        .letter-content { text-align: justify; text-justify: inter-word; white-space: pre-line; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Lora:italic,wght@0,400;1,400&display=swap');
+        .clean-font { font-family: 'Inter', sans-serif; }
+        .romantic-text { font-family: 'Lora', serif; }
+        .custom-scroll::-webkit-scrollbar { width: 0px; }
+        .snap-container {
+          scroll-snap-type: y mandatory;
+          overflow-y: scroll;
+          height: 100vh;
+          width: 100%;
+          scrollbar-width: none;
+        }
+        .snap-section {
+          scroll-snap-align: center;
+          min-height: 100vh;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+        }
       `}</style>
 
-      <ThrowingHearts isVisible={showEffects} />
+      {/* Background Hearts */}
+      <ThrowingHearts isVisible={showHearts} />
 
-      {/* THE BOTTOM-LEFT BEAR */}
+      {/* Static Bear GIF */}
       <AnimatePresence>
-        {showEffects && (
+        {showHearts && (
           <motion.div 
-              initial={{ opacity: 0, x: -50 }} 
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              className="fixed bottom-[-10px] left-[-10px] z-30 pointer-events-none"
+            initial={{ opacity: 0, x: -20 }} 
+            animate={{ opacity: 1, x: 0 }} 
+            className="fixed bottom-4 left-4 z-50 pointer-events-none"
           >
-              <img src={BEAR_GIF_SRC} alt="Bear" className="w-36 h-36 md:w-52 md:h-52 object-contain" />
+            <img src={BEAR_GIF_SRC} alt="Bear" className="w-32 h-32 md:w-48 md:h-48 object-contain" />
           </motion.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence mode="wait">
-        {/* STAGE 1 & 2: HEART & ZOOM */}
+        {/* Stage 1: The Red Heart */}
         {stage === "start" && (
-          <motion.div key="start" className="z-10 flex flex-col items-center cursor-pointer" onClick={() => setStage("zoom")}>
-            <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
-              <Heart size={150} fill="#ff0000" color="#ff0000" />
+          <motion.div key="start" className="h-screen flex flex-col items-center justify-center z-10 cursor-pointer" onClick={() => setStage("zoom")}>
+            <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+              <Heart size={150} fill="#ff0000" color="#ff0000" className="drop-shadow-2xl" />
             </motion.div>
-            <p className="mt-8 text-red-700 font-bold text-2xl tracking-widest animate-pulse">CLICK ME</p>
+            <p className="mt-8 text-red-700 font-black text-2xl tracking-[0.4em] animate-pulse clean-font">CLICK ME</p>
           </motion.div>
         )}
 
+        {/* Stage 2: Heart Zoom Transition */}
         {stage === "zoom" && (
-          <motion.div key="zoom" initial={{ scale: 1 }} animate={{ scale: 40, opacity: 0 }} transition={{ duration: 0.8 }}
-            onAnimationComplete={() => setStage("mail")} className="z-50">
+          <motion.div key="zoom" initial={{ scale: 1 }} animate={{ scale: 60, opacity: 0 }} transition={{ duration: 0.8 }} onAnimationComplete={() => setStage("mail")} className="h-screen flex items-center justify-center z-50">
             <Heart size={150} fill="#ff0000" color="#ff0000" />
           </motion.div>
         )}
 
-        {/* STAGE 3: THE ENVELOPE */}
+        {/* STAGE 3: ENVELOPE (Centered) */}
         {stage === "mail" && (
-          <motion.div key="mail" initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="z-10 flex flex-col items-center w-full max-w-sm">
-            <div className="relative w-full aspect-[16/10] max-w-[320px]">
+          <motion.div 
+            key="mail" 
+            initial={{ scale: 0, opacity: 0 }} 
+            animate={{ scale: 1, opacity: 1 }} 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            <div className="relative w-full max-w-[350px] aspect-[16/10]">
               <div className="absolute inset-0 bg-red-900 rounded-b-xl shadow-2xl z-0" />
               <motion.div 
                 className="absolute top-0 left-0 w-full h-full bg-red-400 origin-top shadow-md rounded-t-sm z-0"
@@ -153,13 +177,14 @@ export default function ProposalPage() {
                 onClick={() => setIsMailOpen(true)}
               />
               <motion.div 
-                drag="y" dragConstraints={{ top: -300, bottom: 0 }}
-                onDragEnd={(_, info) => { if (info.offset.y < -100) setStage("reading"); }}
+                drag="y" 
+                dragConstraints={{ top: -300, bottom: 0 }}
+                onDragEnd={(_, info) => { if (info.offset.y < -100) setStage("scrolling"); }}
                 className="absolute left-2 right-2 bottom-4 bg-white rounded shadow-md p-6 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing z-10"
-                animate={{ y: isMailOpen ? -120 : 0 }}
+                animate={{ y: isMailOpen ? -140 : 0 }}
                 transition={{ type: "spring", stiffness: 100 }}
               >
-                <p className="text-[10px] text-gray-400 font-bold uppercase mb-2 italic text-center">Drag me out</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase mb-2 italic text-center">Drag me up to read</p>
                 <div className="h-1 w-12 bg-gray-100 rounded mb-1" />
                 <div className="h-1 w-8 bg-gray-100 rounded" />
               </motion.div>
@@ -175,127 +200,157 @@ export default function ProposalPage() {
           </motion.div>
         )}
 
-        {/* STAGE 4: READING */}
-        {stage === "reading" && (
-          <motion.div key="reading" initial={{ y: 600 }} animate={{ y: 0 }} exit={{ y: -800 }}
-            className={`z-40 w-full max-w-[360px] h-[75vh] md:h-[650px] rounded-[2.5rem] p-6 flex flex-col justify-between border-t-[12px] border-red-500 relative ${glassClass}`}
-          >
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
-              <div className="w-full flex justify-center mb-4">
-                <img src={SHY_GIF_SRC} alt="Shy Bear" className="w-24 h-24 object-contain" />
+        {/* Stage 4: Scrolling Cards Content */}
+        {stage === "scrolling" && (
+          <motion.div key="scrolling" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="snap-container z-10 custom-scroll">
+            <div className="snap-section">
+              <div className="flex flex-col items-center text-center gap-8 max-w-2xl">
+                <img src={SHY_GIF_SRC} alt="Shy Bear" className="w-48 h-48 object-contain" />
+                <h1 className="romantic-text text-3xl md:text-5xl font-bold text-[#7a5c5c] px-6 leading-tight italic">
+                  Hi Sakshi.. I wanted to share something with you...
+                </h1>
+                <motion.div 
+                  animate={{ y: [0, 12, 0] }} 
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="mt-4 flex flex-col items-center gap-2"
+                >
+                  <p className="clean-font font-bold text-red-400 uppercase tracking-widest text-xs">scroll down to read</p>
+                  <div className="w-px h-8 bg-red-300" />
+                </motion.div>
               </div>
-
-              <p className="romantic-font letter-content text-gray-900 text-[15px] leading-[1.8] italic font-bold px-2">
-                {LETTERS[currentLetterIdx]}
-              </p>
             </div>
-            
-            <div className="flex flex-col items-center gap-4 mt-4 pt-2">
-              {currentLetterIdx < 2 ? (
-                <div 
-                  onClick={() => {
-                      if (currentLetterIdx === 0) setStage("popup1");
-                      else setCurrentLetterIdx(currentLetterIdx + 1);
-                  }}
-                  className="w-full py-3 bg-white/20 rounded-2xl text-center text-red-600 text-[12px] font-bold border-2 border-dashed border-red-200 cursor-pointer"
-                > Next Page ➔ </div>
-              ) : (
-                <button onClick={() => setStage("pre-proposal")} className="w-full py-4 bg-red-600 text-white rounded-2xl font-bold text-sm shadow-lg active:scale-95 transition">Done Reading</button>
-              )}
+
+            {SECTIONS.map((sec, i) => (
+              <div key={i} className="snap-section">
+                <motion.div 
+                  initial={{ y: 50, opacity: 0 }} 
+                  whileInView={{ y: 0, opacity: 1 }} 
+                  viewport={{ once: false, amount: 0.5 }}
+                  className={`max-w-2xl w-full p-10 md:p-16 rounded-[2.5rem] relative flex flex-col items-center justify-center ${cardClass}`}
+                >
+                  {/* Content Container */}
+                  <div className="space-y-6 text-center">
+                    <h2 className="romantic-text text-xl md:text-2xl font-bold text-[#8b5e5e] uppercase tracking-[0.2em] opacity-80">{sec.title}</h2>
+                    <p className="romantic-text text-[#5a4a4a] leading-[1.8] text-lg md:text-2xl italic">
+                      {sec.content}
+                    </p>
+                  </div>
+
+                  {/* Aesthetic Sparkles at Bottom */}
+                  <div className="mt-12 flex items-center gap-2">
+                     <Sparkles size={16} fill="#fbbf24" className="text-[#fbbf24]" />
+                     <Sparkles size={10} fill="#fcd34d" className="text-[#fcd34d]" />
+                  </div>
+                </motion.div>
+              </div>
+            ))}
+
+            <div className="snap-section">
+              <button 
+                onClick={() => setStage("countdown")} 
+                className="px-16 py-7 bg-[#ff4d6d] text-white rounded-2xl font-black shadow-2xl hover:scale-105 transition active:scale-95 clean-font text-2xl tracking-wide"
+              >
+                Continue ➔
+              </button>
             </div>
           </motion.div>
         )}
 
-        {/* POPUPS & PROPOSAL */}
-        {stage === "popup1" && (
-          <motion.div key="p1" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`z-50 p-8 rounded-3xl text-center max-w-[300px] ${glassClass}`}>
-            <p className="text-lg font-bold text-gray-900 mb-6">samajla ki translate karu ?</p>
-            <div className="flex gap-4">
-              <button onClick={() => setStage("popup2")} className="flex-1 py-3 bg-red-500 text-white rounded-xl font-bold">Yes</button>
-              <button onClick={() => { setCurrentLetterIdx(1); setStage("reading"); }} className="flex-1 py-3 bg-white/50 text-gray-700 rounded-xl font-bold">No</button>
-            </div>
-          </motion.div>
-        )}
-
-        {stage === "popup2" && (
-          <motion.div key="p2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`z-50 p-8 rounded-3xl text-center max-w-[300px] ${glassClass}`}>
-            <p className="text-gray-900 font-bold mb-6">Gupchap english madhech vach... jast exagerrate kel ki raag yeto tula 🙂</p>
-            <button onClick={() => { setCurrentLetterIdx(1); setStage("reading"); }} className="w-full py-3 bg-black text-white rounded-xl font-bold">Okay 🙄</button>
-          </motion.div>
-        )}
-
-        {stage === "pre-proposal" && (
-          <motion.div key="pre-prop" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={`z-50 p-10 rounded-[3rem] text-center max-w-[360px] border-b-[10px] border-red-500 ${glassClass}`}>
-             <p className="text-gray-900 font-bold text-lg italic mb-8">Take a deep breath Sakshi...</p>
-             <div className="relative w-40 h-40 flex items-center justify-center mb-8 mx-auto">
-                <svg className="absolute inset-0 w-full h-full -rotate-90">
-                  <circle cx="80" cy="80" r="70" stroke="rgba(255,255,255,0.3)" strokeWidth="10" fill="transparent" />
-                  <motion.circle cx="80" cy="80" r="70" stroke="#ef4444" strokeWidth="10" fill="transparent"
-                    strokeDasharray="440" animate={{ strokeDashoffset: 440 - (440 * countdown) / 15 }}
-                    transition={{ duration: 1, ease: "linear" }}
-                  />
-                </svg>
-                <span className="text-5xl font-black text-red-600">{countdown}</span>
-             </div>
-             {countdown === 0 ? (
-               <button onClick={() => setStage("proposal")} className="w-full py-5 bg-black text-white rounded-2xl font-black shadow-2xl active:scale-95 transition-all">Open Final Question</button>
-             ) : (
-               <p className="text-red-600 font-bold animate-pulse">Wait for it...</p>
-             )}
-          </motion.div>
-        )}
-
-        {stage === "proposal" && (
-          <motion.div key={`sakshi-${noCount}`} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-            className={`z-50 w-full max-w-[340px] rounded-[3rem] p-12 text-center border-4 border-white/20 ${glassClass}`}
-          >
-            <h1 className="text-3xl font-black text-red-600 mb-4">I Love You Sakshi</h1>
-            <h2 className="text-lg font-bold text-gray-900 mb-10">
-              {noCount === 0 ? "Will you be my partner for life?" : noCount === 1 ? "Please don't do this 😢" : "Think one last time..."}
+        {/* Stage 5: Countdown */}
+        {stage === "countdown" && (
+          // UPDATED: BG color
+          <motion.div key="countdown" className="fixed inset-0 z-[100] bg-[#fff0f5] flex flex-col items-center justify-center p-8 text-center">
+            <h2 className="romantic-text text-2xl md:text-3xl font-bold text-[#5a4a4a] mb-16 max-w-lg italic leading-relaxed px-4">
+              "I want you to clearly think one last time before making any decision"
             </h2>
-            <div className="flex flex-col gap-4">
-              <button onClick={() => { setStage("success"); notifyDiscord("YES (Accepted)"); }}
-                className="w-full py-6 bg-red-600 text-white rounded-2xl font-bold shadow-xl active:scale-95 transition">YES! ❤️</button>
-              <button onClick={() => { 
-                const next = noCount + 1; setNoCount(next); notifyDiscord(`NO (Attempt ${next})`);
-                if (next >= 3) setStage("final-goodbye");
-              }} className="w-full py-2 text-gray-700 font-semibold text-xs">No...</button>
+            <div className="relative w-52 h-52 flex items-center justify-center">
+              <svg className="absolute inset-0 w-full h-full -rotate-90">
+                <circle cx="104" cy="104" r="90" stroke="white" strokeWidth="12" fill="transparent" opacity="0.2" />
+                <motion.circle 
+                  cx="104" cy="104" r="90" stroke="#ff4d6d" strokeWidth="12" fill="transparent"
+                  strokeDasharray="565" 
+                  animate={{ strokeDashoffset: 565 - (565 * timer) / 15 }} 
+                  transition={{ duration: 1, ease: "linear" }}
+                />
+              </svg>
+              <span className="text-7xl font-black text-[#ff4d6d] clean-font">{timer}</span>
             </div>
           </motion.div>
         )}
 
-        {stage === "final-goodbye" && (
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={`z-50 text-center p-10 rounded-[2.5rem] max-w-[320px] ${glassClass}`}>
-             <HeartCrack size={80} className="text-red-600 mx-auto mb-6" fill="#fee2e2" />
-             <p className="text-gray-900 italic romantic-font text-lg font-bold">"I understand. Goodbye, Sakshi."</p>
+        {/* Stage 6: Final Decision */}
+        {stage === "decision" && (
+          // UPDATED: BG color
+          <motion.div key="decision" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="fixed inset-0 z-[101] flex items-center justify-center p-6 bg-[#fff0f5]">
+            <div className={`w-full max-w-md p-10 md:p-14 rounded-[2.5rem] text-center ${cardClass}`}>
+              <h1 className="romantic-text text-3xl md:text-4xl font-black text-red-600 mb-3 italic">I Love You Sakshi</h1>
+              <p className="romantic-text font-bold text-gray-600 mb-12 italic text-lg">Will you be my partner for life?</p>
+              
+              <div className="flex flex-col gap-5">
+                <div className="grid grid-cols-2 gap-5">
+                  <button onClick={() => { setStage("success"); notifyDiscord("YES ❤️"); }} className="py-5 bg-red-500 text-white rounded-3xl font-black shadow-xl hover:bg-red-600 transition active:scale-95 clean-font text-lg">Yes ❤️</button>
+                  <button onClick={() => { 
+                    const next = noCount + 1; setNoCount(next); notifyDiscord(`NO (${next})`);
+                    if (next >= 3) setStage("final-goodbye");
+                  }} className="py-5 bg-white/70 text-gray-600 rounded-3xl font-black shadow-md hover:bg-white transition active:scale-95 clean-font text-lg">No...</button>
+                </div>
+                <button onClick={() => { notifyDiscord("NEED TIME"); setStage("need-time"); }} className="w-full py-5 bg-zinc-900 text-white rounded-3xl font-black flex items-center justify-center gap-3 shadow-2xl active:scale-95 clean-font hover:bg-black transition text-lg">
+                  <Timer size={22} /> Need time to decide
+                </button>
+              </div>
+            </div>
           </motion.div>
         )}
 
+        {/* Success Screen */}
         {stage === "success" && (
-          <motion.div key="success" className="z-50 text-center p-8 flex flex-col items-center">
-             <motion.h1 animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity }} className="text-7xl font-black text-red-600 mb-6">YAYYY! 🎉</motion.h1>
-             <div className={`p-8 rounded-3xl ${glassClass}`}>
-                <p className="text-2xl text-gray-900 font-bold mb-10 italic">"You just made me the luckiest person."</p>
-                <button onClick={() => setStage("gift")} className="px-12 py-5 bg-black text-white rounded-full font-bold shadow-2xl active:scale-95 transition">Go Next ➔</button>
-             </div>
+          <motion.div key="success" className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center text-center p-8">
+            <motion.h1 animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity }} className="clean-font text-6xl md:text-7xl font-black text-red-500 mb-10">YAYYY! 🎉</motion.h1>
+            <div className={`p-10 md:p-14 rounded-[2.5rem] ${cardClass} max-w-md`}>
+              <p className="romantic-text text-2xl md:text-3xl text-gray-800 font-bold mb-12 italic">"You just made me the luckiest person in the world."</p>
+              <button onClick={() => setStage("gift")} className="px-16 py-6 bg-black text-white rounded-full font-black shadow-2xl active:scale-95 transition clean-font text-xl">Go Next ➔</button>
+            </div>
           </motion.div>
         )}
 
+        {/* Gift Section */}
         {stage === "gift" && (
-          <motion.div key="gift" className={`z-50 w-full max-w-[350px] rounded-[2.5rem] p-10 text-center border-t-8 border-red-500 ${glassClass}`}>
-             <h3 className="text-xl font-black text-gray-900 mb-6 px-2">I have a special gift planned just for you... 🎁</h3>
-             <button onClick={() => { notifyDiscord("🎁 GIFT CLAIMED!"); setStage("gift-claimed"); }}
-               className="flex items-center justify-center gap-3 w-full py-6 bg-red-600 text-white rounded-2xl font-bold shadow-xl active:scale-95 transition">
-               <Gift size={24} /> Receive My Gift
-             </button>
+          // UPDATED: BG color
+          <motion.div key="gift" className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-[#fff0f5]">
+            <div className={`w-full max-w-md p-10 md:p-14 rounded-[2.5rem] text-center border-t-[12px] border-red-500 ${cardClass}`}>
+              <h3 className="romantic-text text-xl md:text-2xl font-black text-gray-900 mb-10 italic">I have a special gift planned just for you... 🎁</h3>
+              <button onClick={() => { notifyDiscord("🎁 GIFT CLAIMED!"); setStage("gift-claimed"); }} className="flex items-center justify-center gap-3 w-full py-6 bg-red-600 text-white rounded-3xl font-black shadow-2xl active:scale-95 transition clean-font text-xl">
+                <Gift size={28} /> Receive My Gift
+              </button>
+            </div>
           </motion.div>
         )}
 
+        {/* Claimed Status */}
         {stage === "gift-claimed" && (
-          <motion.div key="claimed" className={`z-50 w-full max-w-[320px] rounded-3xl p-10 text-center ${glassClass}`}>
-             <Heart size={40} className="text-green-600 mx-auto mb-6" fill="currentColor" />
-             <h3 className="text-2xl font-black text-gray-900 mb-4">Request Sent!</h3>
-             <p className="text-gray-700 italic font-bold">"Your gift is on its way, Sakshi. ❤️"</p>
+          <motion.div key="claimed" className="fixed inset-0 z-[200] flex items-center justify-center bg-white p-8 text-center">
+            <div className="bg-pink-50/50 p-12 md:p-16 rounded-[2.5rem] border border-pink-100 shadow-2xl max-w-md">
+              <Heart size={80} className="text-green-500 mx-auto mb-8" fill="currentColor" />
+              <h3 className="romantic-text text-3xl md:text-4xl font-black text-gray-900 mb-6 italic">Request Sent!</h3>
+              <p className="romantic-text text-gray-600 italic font-bold text-xl md:text-2xl">"Your gift is on its way, Sakshi. ❤️"</p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Need Time Screen */}
+        {stage === "need-time" && (
+          // UPDATED: BG color
+          <motion.div key="time" className="fixed inset-0 z-[200] bg-[#fff0f5] flex flex-col items-center justify-center p-8 text-center">
+            <Timer size={100} className="text-blue-500 mb-10" />
+            <p className="romantic-text text-2xl md:text-3xl font-bold italic text-[#5a4a4a] max-w-sm leading-relaxed">"Take all the time you need, Sakshi. I'm right here."</p>
+          </motion.div>
+        )}
+
+        {/* Final Goodbye Screen */}
+        {stage === "final-goodbye" && (
+          <motion.div key="bye" className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center p-8 text-center">
+            <HeartCrack size={120} className="text-gray-400 mb-10" />
+            <p className="romantic-text text-2xl md:text-3xl font-bold italic text-gray-600 leading-relaxed">"I understand. Goodbye, Sakshi."</p>
           </motion.div>
         )}
       </AnimatePresence>
