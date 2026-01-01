@@ -18,7 +18,7 @@ const BEAR_GIF_SRC = "/milk-and-mocha.gif";
 
 const SHY_GIF_SRC = "/milkmocha-shy.gif";
 
-const BACKGROUND_IMAGE_SRC = "/pink%20background.jpg"; // Manually encoded to avoid server/client mismatch
+const BACKGROUND_IMAGE_SRC = "/pink background.jpg"; // Manually encoded to avoid server/client mismatch
 
 const BRIGHT_RED = "#ff0000";
 
